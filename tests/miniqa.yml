@@ -1,3 +1,5 @@
+
+# Get GNOME OS images for any version here: https://download.gnome.org/gnomeos/
 image: img/gnome_os_disk_nightly.img
 
 headless: true
