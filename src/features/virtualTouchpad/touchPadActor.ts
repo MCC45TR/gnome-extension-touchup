@@ -170,7 +170,7 @@ export class _TouchPadActor extends Widgets.Column {
     }
 
     show() {
-        this._virtualInputDevice ??= Clutter.get_default_backend().get_default_seat().create_virtual_device(
+        this._virtualInputDevice ??= global.stage.context.get_backend().get_default_seat().create_virtual_device(
             Clutter.InputDeviceType.TOUCHPAD_DEVICE
         );
         super.show();

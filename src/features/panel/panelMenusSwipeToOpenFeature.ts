@@ -12,6 +12,19 @@ import {SmoothFollower, SmoothFollowerLane} from "$src/utils/gestures/smoothFoll
 import TouchUpExtension from "$src/extension";
 import {DisablePanelDragService} from "$src/services/disablePanelDragService";
 import {Ref} from "$src/utils/ui/widgets";
+import * as Config from "resource:///org/gnome/shell/misc/config.js";
+
+const IS_GNOME_51 = Number.parseInt(Config.PACKAGE_VERSION, 10) >= 51;
+
+function openWithoutAnimation(menu: PanelMenu.Button['menu']) {
+    (menu.open as (params: unknown) => void)(
+        IS_GNOME_51 ? {animate: false} : BoxPointer.PopupAnimation.NONE);
+}
+
+function closeWithoutAnimation(menu: PanelMenu.Button['menu']) {
+    (menu.close as (params: unknown) => void)(
+        IS_GNOME_51 ? {animate: false} : BoxPointer.PopupAnimation.NONE);
+}
 
 
 export class PanelMenusSwipeToOpenFeature extends ExtensionFeature {
@@ -52,7 +65,7 @@ export class PanelMenusSwipeToOpenFeature extends ExtensionFeature {
             onGestureStarted: state => {
                 this.isDuringOpenGesture = true;
                 this.currentMenu = _findClosestMenu(menus, state.pressCoordinates.x);
-                this.currentMenu!.menu.open(BoxPointer.PopupAnimation.NONE);
+                openWithoutAnimation(this.currentMenu!.menu);
                 this.currentTransition = new EdgeDragTransition({
                     fullExtent: this.currentBoxPointer?.get_preferred_height(-1)[1]!,
                 });
@@ -96,7 +109,7 @@ export class PanelMenusSwipeToOpenFeature extends ExtensionFeature {
                 const recognizer = new GestureRecognizer({
                     onGestureStarted: () => {
                         this.currentMenu = m;
-                        this.currentMenu!.menu.open(BoxPointer.PopupAnimation.NONE);
+                        openWithoutAnimation(this.currentMenu!.menu);
                         this.currentTransition = new EdgeDragTransition({
                             fullExtent: this.currentBoxPointer?.get_preferred_height(-1)[1]!,
                         });
@@ -236,7 +249,7 @@ export class PanelMenusSwipeToOpenFeature extends ExtensionFeature {
             target: this.currentTransition!.initialValues,
             duration: duration ?? 150,
             onStopped: () => {
-                this.currentMenu!.menu.close(BoxPointer.PopupAnimation.NONE);
+                closeWithoutAnimation(this.currentMenu!.menu);
 
                 // Reset values for the next time the menu is opened:
                 this._applyValues(this.currentTransition!.finalValues);

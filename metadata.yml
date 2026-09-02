@@ -31,7 +31,7 @@ release: &release
   name: TouchUp
   version-name: *version
   description: *description
-  url: https://github.com/mityax/gnome-extension-touchup
+  url: https://github.com/MCC45TR/gnome-extension-touchup
   donations:
     kofi: mityax
     buymeacoffee: mityax
@@ -40,6 +40,7 @@ release: &release
   shell-version:
     - "49"
     - "50"
+    - "51"
   gettext-domain: touchup
   settings-schema: org.gnome.shell.extensions.touchup
   session-modes:
