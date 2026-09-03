@@ -1,0 +1,46 @@
+name: Sync upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Merge upstream changes
+        run: |
+          git config user.name 'gnome-extension-touchup automation'
+          git config user.email 'mcc45tr@gmail.com'
+          git remote add upstream https://github.com/mityax/gnome-extension-touchup.git
+          git fetch upstream main
+          git merge --no-edit upstream/main
+      - name: Validate GNOME 51 port
+        run: |
+          npm ci
+          npm run lint:tsc
+          npm run build:release
+          jq -e '."shell-version" | index("51")' metadata.json >/dev/null
+          ! grep -R --line-number 'Clutter\.get_default_backend' --include='*.ts' src
+      - name: Push when changed
+        run: |
+          if git diff --quiet origin/main...HEAD; then
+            echo 'Fork is already current.'
+            exit 0
+          fi
+          git push origin HEAD:main
