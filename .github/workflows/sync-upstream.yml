@@ -24,7 +24,7 @@ jobs:
           node-version: '22'
           cache: npm
       - name: Install build dependencies
-        run: sudo apt-get update && sudo apt-get install -y libglib2.0-dev-bin
+        run: sudo apt-get update && sudo apt-get install -y libglib2.0-dev-bin libxml2-utils
       - name: Merge upstream changes
         run: |
           git config user.name 'gnome-extension-touchup automation'
@@ -37,7 +37,7 @@ jobs:
           npm ci
           npm run lint:tsc
           npm run build:release
-          jq -e '."shell-version" | index("51")' metadata.json >/dev/null
+          jq -e '."shell-version" | index("51")' dist/output/metadata.json >/dev/null
           ! grep -R --line-number 'Clutter\.get_default_backend' --include='*.ts' src
       - name: Push when changed
         run: |
