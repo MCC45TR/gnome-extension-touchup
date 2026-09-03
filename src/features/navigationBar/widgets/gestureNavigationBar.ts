@@ -511,30 +511,6 @@ DEBUG:
     // // Save pxibuf as png image to tempdir to inspect:
     // // pixbuf.savev(`/tmp/pxibuf-1-${avgColor}-${luminance}.png`, 'png', null, null);
 
-    // Low-level api attempt (not working; missing introspection annotations for `Cogl.SubTexture.get_data`):
-    // try {
-    //     const ctx = Clutter.get_default_backend().get_cogl_context();
-    //     const subtex = Cogl.SubTexture.new(ctx, wholeScreenTexture, area.x, area.y, area.w, area.h);
-    //     //const surface = new Cairo.ImageSurface(Cairo.Format.ARGB32, subtex.get_width(), subtex.get_height());
-    //
-    //     if (subtex) {
-    //         //const size = subtex.get_data(PixelFormat.ARGB_8888, 0, null);
-    //         //const buf = new Uint8Array(size);
-    //         let [buf, size] = subtex.get_data(PixelFormat.ARGB_8888, 0);
-    //
-    //         logger.debug("Buf length: ", buf.length, " - max: ", Math.max(...buf.values()));
-    //     } else {
-    //         logger.debug("Subtex is null");
-    //     }
-    // } catch (e) {
-    //     logger.debug("Error in updatePillBrightness: ", e);
-    // }
-
-    // Mid-level attempt (not working; missing introspection annotations for `Cogl.Framebuffer.read_pixels`):
-    // const ctx = Clutter.get_default_backend().get_cogl_context();
-    // const subtex = Cogl.SubTexture.new(ctx, wholeScreenTexture, area.x, area.y, area.w, area.h);
-    // logger.debug("subtex: ", subtex);
-    // if (subtex) {
     //     /*(global.stage as Clutter.Stage).paint_to_buffer(
     //         new Mtk.Rectangle({x: area.x, y: area.y, width: area.w, height: area.h}),
     //         1,
